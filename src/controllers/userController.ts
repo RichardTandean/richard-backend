@@ -36,12 +36,13 @@ export const updateProfile = async (req: AuthRequest, res: Response, next: NextF
       });
     }
 
-    const { name } = req.body;
+    const { name, avatarBase64 } = req.body;
     let avatarUrl: string | undefined;
 
-    // Handle file upload if present
-    if (req.file) {
-      avatarUrl = `/uploads/${req.file.filename}`;
+    // Handle base64 image if present
+    if (avatarBase64) {
+      // Store base64 string directly
+      avatarUrl = avatarBase64;
     }
 
     const user = await userService.updateProfile(req.user!.userId, { name, avatarUrl });

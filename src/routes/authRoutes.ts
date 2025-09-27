@@ -7,22 +7,26 @@ import {
   resetPassword, 
   logout 
 } from '@/controllers/authController';
-import { authRateLimit } from '@/middleware/rateLimiter';
+import { 
+  loginRateLimit, 
+  registerRateLimit, 
+  resetPasswordRateLimit, 
+  authRateLimit 
+} from '@/middleware/rateLimiter';
 import { authenticate } from '@/middleware/auth';
 
 const router = Router();
 
-// Apply rate limiting to auth routes
-router.use(authRateLimit);
+// Public routes with specific rate limits
+router.post('/register', registerRateLimit, register);
+router.post('/login', loginRateLimit, login);
+router.post('/forgot', resetPasswordRateLimit, forgotPassword);
+router.post('/reset', resetPasswordRateLimit, resetPassword);
 
-// Public routes
-router.post('/register', register);
-router.post('/login', login);
-router.post('/forgot', forgotPassword);
-router.post('/reset', resetPassword);
-router.post('/refresh', refreshToken);
+// Other auth routes with general rate limit
+router.post('/refresh', authRateLimit, refreshToken);
 
 // Protected routes
-router.post('/logout', authenticate, logout);
+router.post('/logout', authRateLimit, authenticate, logout);
 
 export default router;

@@ -30,7 +30,10 @@ export const updateProfileSchema = z.object({
 export const userListQuerySchema = z.object({
   q: z.string().optional(),
   page: z.string().transform(Number).pipe(z.number().min(1)).default(1),
-  limit: z.string().transform(Number).pipe(z.number().min(1).max(100)).default(10)
+  limit: z.string().transform(Number).pipe(z.number().min(1).max(100)).default(10),
+  role: z.enum(['admin', 'user']).optional(),
+  sortBy: z.enum(['createdAt', 'name', 'email']).default('createdAt'),
+  sortOrder: z.enum(['asc', 'desc']).default('desc')
 });
 
 export const paramsSchema = z.object({

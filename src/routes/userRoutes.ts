@@ -3,8 +3,7 @@ import {
   getCurrentUser, 
   updateProfile, 
   getUsers, 
-  getUserById,
-  uploadAvatar 
+  getUserById
 } from '@/controllers/userController';
 import { authenticate, requireAdmin } from '@/middleware/auth';
 
@@ -15,7 +14,7 @@ router.use(authenticate);
 
 // Profile routes (accessible to all authenticated users)
 router.get('/me', getCurrentUser);
-router.put('/me', uploadAvatar, updateProfile);
+router.put('/me', updateProfile);
 
 // Admin-only routes
 router.get('/', requireAdmin, getUsers);

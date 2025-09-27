@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import { prisma } from '@/models';
 import { generateTokens, verifyRefreshToken } from '@/utils/jwt';
 import { CustomError } from '@/utils/errorHandler';
-import { EmailService } from './emailService';
+import { BrevoEmailService } from './brevoEmailService';
 import { 
   RegisterRequest, 
   LoginRequest, 
@@ -13,10 +13,10 @@ import {
 } from '@/types';
 
 export class AuthService {
-  private emailService: EmailService;
+  private emailService: BrevoEmailService;
 
   constructor() {
-    this.emailService = new EmailService();
+    this.emailService = new BrevoEmailService();
   }
   async register(data: RegisterRequest): Promise<LoginResponse> {
     const { name, email, password, role } = data;

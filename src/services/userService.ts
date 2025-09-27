@@ -33,16 +33,26 @@ export class UserService {
   }
 
   async getUsers(query: UserListQuery): Promise<PaginatedResponse<Omit<User, 'passwordHash'>>> {
-    const { q, page = 1, limit = 10 } = query;
+    const { q, page = 1, limit = 10, role, sortBy = 'createdAt', sortOrder = 'desc' } = query;
     const skip = (page - 1) * limit;
 
-    // Build where clause for search
-    const where = q ? {
-      OR: [
+    // Build where clause for search and role filter
+    const where: any = {};
+    
+    if (q) {
+      where.OR = [
         { name: { contains: q, mode: 'insensitive' as const } },
         { email: { contains: q, mode: 'insensitive' as const } }
-      ]
-    } : {};
+      ];
+    }
+    
+    if (role) {
+      where.role = role;
+    }
+
+    // Build orderBy clause
+    const orderBy: any = {};
+    orderBy[sortBy] = sortOrder;
 
     // Get users and total count
     const [users, total] = await Promise.all([
@@ -59,7 +69,7 @@ export class UserService {
         },
         skip,
         take: limit,
-        orderBy: { createdAt: 'desc' }
+        orderBy
       }),
       prisma.user.count({ where })
     ]);

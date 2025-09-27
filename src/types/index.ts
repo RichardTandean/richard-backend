@@ -58,6 +58,9 @@ export interface UserListQuery {
   q?: string;
   page?: number;
   limit?: number;
+  role?: 'admin' | 'user';
+  sortBy?: 'createdAt' | 'name' | 'email';
+  sortOrder?: 'asc' | 'desc';
 }
 
 export interface PaginatedResponse<T> {
