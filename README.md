@@ -1,310 +1,229 @@
 # Richard Backend API
 
-A robust, scalable Express.js backend API built with TypeScript, featuring JWT authentication, role-based access control, email services, rate limiting, and comprehensive user management.
+A robust, scalable backend API built with Node.js, Express, TypeScript, and Prisma. This API provides authentication, user management, and admin functionality for the Richard Astronacci Flutter application.
 
-## 🚀 Tech Stack
+## 🚀 Features
 
-### **Core Technologies**
-- **Runtime**: Node.js 18+
-- **Framework**: Express.js 4.x
-- **Language**: TypeScript 5.x
-- **Database**: PostgreSQL 15+
-- **ORM**: Prisma 5.x
-- **Authentication**: JWT (JSON Web Tokens)
+- **Authentication System** - JWT-based auth with refresh tokens
+- **User Management** - CRUD operations with role-based access control
+- **Admin Panel** - Admin-only user creation and management
+- **Email Service** - Brevo API integration for transactional emails
+- **Rate Limiting** - Configurable rate limits for API protection
+- **Image Handling** - Base64 image storage for user avatars
+- **Password Reset** - Secure password reset with email verification
+- **Deep Linking** - Support for mobile app deep links
+- **Database Migrations** - Prisma-based database management
+- **CORS Support** - Cross-origin resource sharing for mobile apps
 
-### **Key Libraries & Dependencies**
+## 🛠️ Tech Stack
 
-#### **Core Framework**
-```json
-{
-  "express": "^4.18.2",
-  "typescript": "^5.2.2",
-  "@types/express": "^4.17.17",
-  "@types/node": "^20.6.0"
-}
-```
+### Core Technologies
+- **Node.js** - JavaScript runtime
+- **Express.js** - Web framework
+- **TypeScript** - Type-safe JavaScript
+- **Prisma** - Database ORM and migrations
 
-#### **Database & ORM**
-```json
-{
-  "prisma": "^5.4.2",
-  "@prisma/client": "^5.4.2",
-  "pg": "^8.11.3",
-  "@types/pg": "^8.10.2"
-}
-```
+### Database
+- **PostgreSQL** - Primary database (Neon)
+- **Prisma Client** - Type-safe database access
 
-#### **Authentication & Security**
-```json
-{
-  "jsonwebtoken": "^9.0.2",
-  "@types/jsonwebtoken": "^9.0.2",
-  "bcryptjs": "^2.4.3",
-  "@types/bcryptjs": "^2.4.2",
-  "express-rate-limit": "^6.10.0"
-}
-```
+### Authentication & Security
+- **JWT** - JSON Web Tokens for authentication
+- **bcryptjs** - Password hashing
+- **express-rate-limit** - API rate limiting
+- **helmet** - Security headers
+- **cors** - Cross-origin resource sharing
 
-#### **Email Services**
-```json
-{
-  "axios": "^1.5.0",
-  "nodemailer": "^6.9.4",
-  "@types/nodemailer": "^6.4.9"
-}
-```
+### Email Service
+- **Brevo API** - Transactional email service
+- **Nodemailer** - Email sending (fallback)
 
-#### **Validation & Middleware**
-```json
-{
-  "joi": "^17.9.2",
-  "cors": "^2.8.5",
-  "@types/cors": "^2.8.13",
-  "helmet": "^7.0.0",
-  "morgan": "^1.10.0",
-  "@types/morgan": "^1.9.4"
-}
-```
+### Development Tools
+- **ts-node-dev** - Development server with hot reload
+- **tsc-alias** - TypeScript path alias resolution
+- **morgan** - HTTP request logging
 
-#### **Development Tools**
-```json
-{
-  "nodemon": "^3.0.1",
-  "ts-node": "^10.9.1",
-  "concurrently": "^8.2.0",
-  "dotenv": "^16.3.1"
-}
-```
+## 📦 Installation
 
-## 📋 Features
+### Prerequisites
+- Node.js (v18 or higher)
+- PostgreSQL database
+- Brevo API key (for email service)
 
-- ✅ **JWT Authentication** - Secure token-based authentication
-- ✅ **Role-Based Access Control** - Admin and User roles
-- ✅ **Email Services** - Brevo API integration for transactional emails
-- ✅ **Rate Limiting** - Configurable rate limits for different endpoints
-- ✅ **User Management** - Complete CRUD operations with pagination
-- ✅ **Profile Management** - Update profile with base64 image storage
-- ✅ **Password Reset** - Secure password reset with email verification
-- ✅ **Deep Link Support** - Flutter app integration
-- ✅ **Input Validation** - Comprehensive request validation
-- ✅ **Error Handling** - Centralized error handling
-- ✅ **Security Headers** - Helmet.js security middleware
-- ✅ **Request Logging** - Morgan HTTP request logger
+### Setup
 
-## 🛠️ Setup & Installation
-
-### **Prerequisites**
-- Node.js 18+ 
-- PostgreSQL 15+
-- npm or yarn
-
-### **1. Clone & Install**
+1. **Clone the repository**
    ```bash
-git clone https://github.com/RichardTandean/richard-backend.git
-cd richard-backend
+   git clone https://github.com/RichardTandean/richard-backend.git
+   cd richard-backend
+   ```
+
+2. **Install dependencies**
+   ```bash
    npm install
    ```
 
-### **2. Environment Configuration**
-```bash
-# Copy environment template
-cp env.example .env
+3. **Environment Configuration**
+   ```bash
+   cp .env.example .env
+   ```
+   
+   Update `.env` with your configuration:
+   ```env
+   # Database
+   DATABASE_URL="postgresql://username:password@host:port/database"
+   
+   # JWT
+   JWT_SECRET="your-super-secret-jwt-key"
+   JWT_REFRESH_SECRET="your-refresh-secret-key"
+   JWT_EXPIRES_IN="15m"
+   JWT_REFRESH_EXPIRES_IN="7d"
+   
+   # Email Service (Brevo)
+   BREVO_API_KEY="your-brevo-api-key"
+   FROM_EMAIL="noreply@yourdomain.com"
+   
+   # CORS
+   CORS_ORIGIN="*"
+   
+   # Frontend URL
+   FRONTEND_URL="richardapp://reset-password"
+   ```
 
-# Update .env with your configuration
-# See Environment Variables section below
-```
-
-### **3. Database Setup**
+4. **Database Setup**
    ```bash
    # Generate Prisma client
    npm run db:generate
    
-# Push schema to database (development)
-   npm run db:push
-   
-# Or run migrations (production)
+   # Run migrations
    npm run db:migrate
+   
+   # (Optional) Generate mock users
+   npm run generate:mock-users
    ```
 
-### **4. Start Development Server**
+5. **Start the server**
    ```bash
+   # Development
    npm run dev
+   
+   # Production
+   npm run build
+   npm start
    ```
 
-Server will start at `http://localhost:3001`
+## 🚀 Deployment
 
-## 🔧 Environment Variables
+### Railway Deployment
 
-See `env.example` for complete configuration options. Key variables:
+1. **Connect to Railway**
+   - Link your GitHub repository
+   - Set environment variables in Railway dashboard
 
-```env
-# Database
-DATABASE_URL="postgresql://username:password@localhost:5432/richard_db"
+2. **Required Environment Variables**
+   ```
+   DATABASE_URL=postgresql://...
+   JWT_SECRET=your-secret
+   JWT_REFRESH_SECRET=your-refresh-secret
+   BREVO_API_KEY=your-brevo-key
+   FROM_EMAIL=noreply@yourdomain.com
+   CORS_ORIGIN=*
+   FRONTEND_URL=richardapp://reset-password
+   ```
 
-# JWT Configuration
-JWT_SECRET="your-super-secret-jwt-key-here"
-JWT_REFRESH_SECRET="your-super-secret-refresh-key-here"
-JWT_EXPIRES_IN="15m"
-JWT_REFRESH_EXPIRES_IN="7d"
-
-# Server Configuration
-PORT=3001
-NODE_ENV="development"
-
-# Email Service (Brevo API)
-BREVO_API_KEY="xkeysib-your-actual-api-key-here"
-FROM_EMAIL="noreply@yourdomain.com"
-FROM_NAME="Richard App"
-
-# CORS Configuration
-CORS_ORIGIN="http://localhost:3000,http://192.168.0.154:3000,http://192.168.0.154:3001"
-
-# Rate Limiting
-LOGIN_RATE_LIMIT_MAX=5       # 1 login per minute
-REGISTER_RATE_LIMIT_MAX=3    # 1 registration per 3 minutes
-RESET_RATE_LIMIT_MAX=5       # 1 reset per 2 minutes
-
-# Frontend Integration
-FRONTEND_URL="richardapp://reset-password"
-```
+3. **Deploy**
+   - Railway automatically builds and deploys on push to main
+   - Uses `start:prod` script for production deployment
 
 ## 📚 API Documentation
 
-### **Base URL**
+### Base URL
 ```
-Development: http://localhost:3001/api
-Production: https://your-domain.com/api
-```
-
-### **Authentication Endpoints**
-
-#### **1. Register User**
-```http
-POST /api/auth/register
+Production: https://richard-backend.up.railway.app
+Development: http://localhost:3000
 ```
 
-**Headers:**
-```json
-{
-  "Content-Type": "application/json"
-}
-```
+### Authentication Endpoints
+
+#### POST /api/auth/register
+Register a new user account.
 
 **Request Body:**
 ```json
 {
   "name": "John Doe",
   "email": "john@example.com",
-  "password": "SecurePassword123!",
-  "confirmPassword": "SecurePassword123!",
+  "password": "password123",
   "role": "user"
 }
 ```
 
-**Response (201):**
+**Response:**
 ```json
 {
   "success": true,
   "message": "User registered successfully",
   "data": {
-    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
     "user": {
-      "id": "cmg2dknev0000rq2r9biklrds",
+      "id": "user_id",
       "name": "John Doe",
       "email": "john@example.com",
       "role": "user",
       "avatarUrl": null,
-      "createdAt": "2024-01-01T00:00:00.000Z",
-      "updatedAt": "2024-01-01T00:00:00.000Z"
+      "createdAt": "2025-01-01T00:00:00.000Z"
+    },
+    "tokens": {
+      "access_token": "jwt_token",
+      "refresh_token": "refresh_token"
     }
   }
 }
 ```
 
-#### **2. Login User**
-```http
-POST /api/auth/login
-```
-
-**Headers:**
-```json
-{
-  "Content-Type": "application/json"
-}
-```
+#### POST /api/auth/login
+Authenticate user and get tokens.
 
 **Request Body:**
 ```json
 {
   "email": "john@example.com",
-  "password": "SecurePassword123!"
+  "password": "password123"
 }
 ```
 
-**Response (200):**
+**Response:**
 ```json
 {
   "success": true,
   "message": "Login successful",
   "data": {
-    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
     "user": {
-      "id": "cmg2dknev0000rq2r9biklrds",
+      "id": "user_id",
       "name": "John Doe",
       "email": "john@example.com",
       "role": "user",
-      "avatarUrl": null,
-      "createdAt": "2024-01-01T00:00:00.000Z",
-      "updatedAt": "2024-01-01T00:00:00.000Z"
+      "avatarUrl": "base64_image_data"
+    },
+    "tokens": {
+      "access_token": "jwt_token",
+      "refresh_token": "refresh_token"
     }
   }
 }
 ```
 
-#### **3. Refresh Token**
-```http
-POST /api/auth/refresh
-```
-
-**Headers:**
-```json
-{
-  "Content-Type": "application/json"
-}
-```
+#### POST /api/auth/refresh
+Refresh access token using refresh token.
 
 **Request Body:**
 ```json
 {
-  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "refresh_token": "refresh_token"
 }
 ```
 
-**Response (200):**
-```json
-{
-  "success": true,
-  "message": "Token refreshed successfully",
-  "data": {
-    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-  }
-}
-```
-
-#### **4. Forgot Password**
-```http
-POST /api/auth/forgot
-```
-
-**Headers:**
-```json
-{
-  "Content-Type": "application/json"
-}
-```
+#### POST /api/auth/forgot-password
+Send password reset email.
 
 **Request Body:**
 ```json
@@ -313,373 +232,311 @@ POST /api/auth/forgot
 }
 ```
 
-**Response (200):**
-```json
-{
-  "success": true,
-  "message": "If the email exists, a password reset link has been sent"
-}
-```
-
-#### **5. Reset Password**
-```http
-POST /api/auth/reset
-```
-
-**Headers:**
-```json
-{
-  "Content-Type": "application/json"
-}
-```
+#### POST /api/auth/reset-password
+Reset password using reset token.
 
 **Request Body:**
 ```json
 {
-  "token": "reset-token-from-email",
-  "password": "NewSecurePassword123!",
-  "confirmPassword": "NewSecurePassword123!"
+  "token": "reset_token",
+  "password": "new_password123"
 }
 ```
 
-**Response (200):**
-```json
-{
-  "success": true,
-  "message": "Password reset successfully"
-}
-```
+### User Management Endpoints
 
-#### **6. Logout**
-```http
-POST /api/auth/logout
-```
+#### GET /api/users/me
+Get current user profile.
 
 **Headers:**
-```json
-{
-  "Content-Type": "application/json",
-  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
+```
+Authorization: Bearer <access_token>
 ```
 
-**Response (200):**
-```json
-{
-  "success": true,
-  "message": "Logged out successfully"
-}
-```
-
-### **User Profile Endpoints**
-
-#### **1. Get Current User**
-```http
-GET /api/users/me
-```
-
-**Headers:**
-```json
-{
-  "Content-Type": "application/json",
-  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-```
-
-**Response (200):**
+**Response:**
 ```json
 {
   "success": true,
   "data": {
-    "id": "cmg2dknev0000rq2r9biklrds",
+    "id": "user_id",
     "name": "John Doe",
     "email": "john@example.com",
     "role": "user",
-    "avatarUrl": "iVBORw0KGgoAAAANSUhEUgAAA2AAAANgCAIAAADF8Jzz...",
-    "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
+    "avatarUrl": "base64_image_data",
+    "createdAt": "2025-01-01T00:00:00.000Z"
   }
 }
 ```
 
-#### **2. Update Profile**
-```http
-PUT /api/users/me
-```
+#### PUT /api/users/me
+Update current user profile.
 
 **Headers:**
-```json
-{
-  "Content-Type": "application/json",
-  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
+```
+Authorization: Bearer <access_token>
 ```
 
 **Request Body:**
 ```json
 {
-  "name": "John Updated Doe",
-  "avatarBase64": "iVBORw0KGgoAAAANSUhEUgAAA2AAAANgCAIAAADF8Jzz..."
+  "name": "John Smith",
+  "avatarBase64": "data:image/jpeg;base64,..."
 }
 ```
 
-**Response (200):**
-```json
-{
-  "success": true,
-  "message": "Profile updated successfully",
-  "data": {
-    "id": "cmg2dknev0000rq2r9biklrds",
-    "name": "John Updated Doe",
-    "email": "john@example.com",
-    "role": "user",
-    "avatarUrl": "iVBORw0KGgoAAAANSUhEUgAAA2AAAANgCAIAAADF8Jzz...",
-    "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
-  }
-}
-```
-
-### **Admin User Management Endpoints**
-
-#### **1. Get Users (Paginated)**
-```http
-GET /api/users?page=1&limit=10&search=john&role=user&sortBy=name&sortOrder=asc
-```
+#### GET /api/users
+Get paginated list of users (Admin only).
 
 **Headers:**
-```json
-{
-  "Content-Type": "application/json",
-  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
+```
+Authorization: Bearer <access_token>
 ```
 
 **Query Parameters:**
 - `page` (number): Page number (default: 1)
-- `limit` (number): Items per page (default: 10, max: 50)
-- `search` (string): Search by name or email
-- `role` (string): Filter by role ("admin" | "user")
-- `sortBy` (string): Sort field ("name" | "email" | "createdAt")
-- `sortOrder` (string): Sort direction ("asc" | "desc")
+- `limit` (number): Items per page (default: 8)
+- `q` (string): Search query
+- `role` (string): Filter by role (admin/user)
+- `sortBy` (string): Sort field (default: createdAt)
+- `sortOrder` (string): Sort direction (asc/desc, default: desc)
 
-**Response (200):**
+**Response:**
 ```json
 {
   "success": true,
   "data": [
     {
-      "id": "cmg2dknev0000rq2r9biklrds",
+      "id": "user_id",
       "name": "John Doe",
       "email": "john@example.com",
       "role": "user",
-      "avatarUrl": "iVBORw0KGgoAAAANSUhEUgAAA2AAAANgCAIAAADF8Jzz...",
-      "createdAt": "2024-01-01T00:00:00.000Z",
-      "updatedAt": "2024-01-01T00:00:00.000Z"
+      "avatarUrl": "base64_image_data",
+      "createdAt": "2025-01-01T00:00:00.000Z"
     }
   ],
   "meta": {
     "page": 1,
-    "limit": 10,
+    "limit": 8,
     "total": 25,
-    "totalPages": 3,
+    "totalPages": 4,
     "hasNext": true,
     "hasPrev": false
   }
 }
 ```
 
-#### **2. Get User by ID**
-```http
-GET /api/users/:id
-```
+#### POST /api/users
+Create new user (Admin only).
 
 **Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Request Body:**
 ```json
 {
-  "Content-Type": "application/json",
-  "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "password": "password123",
+  "role": "user",
+  "avatarBase64": "data:image/jpeg;base64,..."
 }
 ```
 
-**Response (200):**
+#### GET /api/users/:id
+Get user by ID (Admin only).
+
+**Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+### Health Check
+
+#### GET /health
+Check API health status.
+
+**Response:**
 ```json
 {
   "success": true,
-  "data": {
-    "id": "cmg2dknev0000rq2r9biklrds",
-    "name": "John Doe",
-    "email": "john@example.com",
-    "role": "user",
-    "avatarUrl": "iVBORw0KGgoAAAANSUhEUgAAA2AAAANgCAIAAADF8Jzz...",
-    "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
-  }
-}
-```
-
-## 📊 Error Responses
-
-### **Standard Error Format**
-```json
-{
-  "success": false,
-  "message": "Error description",
-  "error": "ERROR_CODE",
-  "details": {
-    "field": "Specific error details"
-  }
-}
-```
-
-### **Common HTTP Status Codes**
-- `200` - Success
-- `201` - Created
-- `400` - Bad Request (validation errors)
-- `401` - Unauthorized (invalid/missing token)
-- `403` - Forbidden (insufficient permissions)
-- `404` - Not Found
-- `409` - Conflict (duplicate email)
-- `429` - Too Many Requests (rate limit exceeded)
-- `500` - Internal Server Error
-
-### **Example Error Responses**
-
-#### **Validation Error (400)**
-```json
-{
-  "success": false,
-  "message": "Validation failed",
-  "error": "VALIDATION_ERROR",
-  "details": {
-    "email": "Email is required",
-    "password": "Password must be at least 8 characters"
-  }
-}
-```
-
-#### **Unauthorized (401)**
-```json
-{
-  "success": false,
-  "message": "Authentication required",
-  "error": "UNAUTHORIZED"
-}
-```
-
-#### **Forbidden (403)**
-```json
-{
-  "success": false,
-  "message": "Admin access required",
-  "error": "FORBIDDEN"
-}
-```
-
-#### **Rate Limit Exceeded (429)**
-```json
-{
-  "success": false,
-  "message": "Too many requests, please try again later",
-  "error": "RATE_LIMIT_EXCEEDED",
-  "details": {
-    "retryAfter": "60 seconds"
-  }
+  "message": "Server is running",
+  "timestamp": "2025-01-01T00:00:00.000Z"
 }
 ```
 
 ## 🔒 Security Features
 
-### **Authentication & Authorization**
-- JWT-based authentication with access and refresh tokens
+### Rate Limiting
+- **Login**: 20 attempts per minute
+- **Registration**: 10 attempts per 3 minutes
+- **Password Reset**: 10 attempts per 2 minutes
+- **Auth Operations**: 100 requests per 15 minutes
+- **General Requests**: 1000 requests per 15 minutes
+
+### Authentication
+- JWT access tokens (15 minutes expiry)
+- Refresh tokens (7 days expiry)
+- Secure password hashing with bcryptjs
 - Role-based access control (Admin/User)
-- Password hashing with bcrypt
-- Secure token expiration and refresh
 
-### **Rate Limiting**
-- **General API**: 100 requests per 15 minutes
-- **Login**: 5 attempts per 15 minutes
-- **Registration**: 3 attempts per 15 minutes
-- **Password Reset**: 5 attempts per 15 minutes
-
-### **Security Headers**
+### Security Headers
 - Helmet.js for security headers
 - CORS configuration
-- Input validation with Joi
-- SQL injection protection via Prisma
+- Trust proxy for Railway deployment
 
-### **Email Security**
-- Secure password reset tokens
-- Email verification for account creation
-- Brevo API for reliable email delivery
+## 📊 Database Schema
 
-## 🚀 Deployment
-
-### **Production Build**
-```bash
-npm run build
-npm start
+### User Model
+```prisma
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("user")
+  avatarUrl    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  resetTokens  PasswordResetToken[]
+}
 ```
 
-### **Environment Variables for Production**
-```env
-NODE_ENV="production"
-PORT=3001
-DATABASE_URL="your-production-database-url"
-JWT_SECRET="your-production-jwt-secret"
-BREVO_API_KEY="your-production-brevo-key"
-CORS_ORIGIN="https://your-domain.com"
+### PasswordResetToken Model
+```prisma
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+}
 ```
 
-### **Docker Deployment**
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-RUN npm run build
-EXPOSE 3001
-CMD ["npm", "start"]
-```
+## 🛠️ Development
 
-## 📝 Available Scripts
-
+### Available Scripts
 ```bash
 # Development
-npm run dev          # Start development server with hot reload
-npm run build        # Build for production
-npm start           # Start production server
+npm run dev              # Start development server
+npm run build            # Build for production
+npm start                # Start production server
+npm run start:prod       # Start with database migrations
 
 # Database
-npm run db:generate  # Generate Prisma client
-npm run db:push      # Push schema to database (development)
-npm run db:migrate   # Run database migrations (production)
-npm run db:studio    # Open Prisma Studio
+npm run db:generate      # Generate Prisma client
+npm run db:push          # Push schema to database
+npm run db:migrate       # Run migrations
+npm run db:migrate:deploy # Deploy migrations (production)
+npm run db:studio        # Open Prisma Studio
 
 # Utilities
-npm run lint         # Run ESLint
-npm run type-check   # Run TypeScript compiler check
+npm run generate:mock-users # Generate 30 mock users
+npm run test:api         # Test API endpoints
 ```
+
+### Project Structure
+```
+src/
+├── controllers/         # Route controllers
+├── middleware/          # Custom middleware
+├── models/             # Prisma models
+├── routes/             # API routes
+├── services/           # Business logic
+├── utils/              # Utility functions
+├── app.ts              # Express app configuration
+└── server.ts           # Server entry point
+```
+
+## 🚀 Performance
+
+### Optimizations
+- Database connection pooling
+- Efficient pagination with caching
+- Image compression for avatars
+- Rate limiting to prevent abuse
+- CORS optimization for mobile apps
+
+### Monitoring
+- Morgan HTTP logging
+- Error tracking and handling
+- Health check endpoint
+- Railway deployment monitoring
+
+## 📱 Mobile App Integration
+
+### Deep Linking
+- Password reset links: `richardapp://reset-password?token=...`
+- Configured in Android and iOS apps
+
+### CORS Configuration
+- Configured for mobile app access
+- Supports both development and production URLs
+
+### Image Handling
+- Base64 image storage for avatars
+- Automatic image compression
+- Fallback to user initials
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+1. **Database Connection**
+   - Check DATABASE_URL in .env
+   - Ensure database is accessible
+   - Run migrations: `npm run db:migrate`
+
+2. **Email Service**
+   - Verify BREVO_API_KEY is correct
+   - Check FROM_EMAIL is valid
+   - Test with: `npm run test:email`
+
+3. **Rate Limiting**
+   - Check rate limit headers in response
+   - Adjust limits in rateLimiter.ts if needed
+
+4. **CORS Issues**
+   - Verify CORS_ORIGIN setting
+   - Check mobile app URL configuration
+
+### Debug Commands
+```bash
+# Test database connection
+npm run db:studio
+
+# Test email service
+npm run test:email
+
+# Test API endpoints
+npm run test:api
+
+# Check logs
+npm run dev  # Development logs
+```
+
+## 📄 License
+
+This project is licensed under the ISC License.
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
+## 📞 Support
 
 For support and questions:
-- Create an issue in the GitHub repository
-- Email: richard244tandean@gmail.com
+- Create an issue on GitHub
+- Check the troubleshooting section
+- Review the API documentation
 
 ---
 
-**Built with ❤️ by Richard Tandean**
+**Built with ❤️ for the Richard Astronacci project**
