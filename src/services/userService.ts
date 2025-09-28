@@ -34,7 +34,7 @@ export class UserService {
   }
 
   async getUsers(query: UserListQuery): Promise<PaginatedResponse<Omit<User, 'passwordHash'>>> {
-    const { q, page = 1, limit = 10, role, sortBy = 'createdAt', sortOrder = 'desc' } = query;
+    const { q, page = 1, limit = 8, role, sortBy = 'createdAt', sortOrder = 'desc' } = query;
     const skip = (page - 1) * limit;
 
     // Build where clause for search and role filter

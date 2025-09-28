@@ -18,6 +18,7 @@
     "update:email": "node scripts/update-email.js",
     "test:email": "ts-node -r tsconfig-paths/register src/utils/emailTester.ts",
     "test:api": "node scripts/test-apis.js",
+    "generate:mock-users": "node scripts/generate-mock-users.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
