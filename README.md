@@ -99,11 +99,11 @@ A robust, scalable Express.js backend API built with TypeScript, featuring JWT a
 - npm or yarn
 
 ### **1. Clone & Install**
-```bash
+   ```bash
 git clone https://github.com/RichardTandean/richard-backend.git
 cd richard-backend
-npm install
-```
+   npm install
+   ```
 
 ### **2. Environment Configuration**
 ```bash
@@ -115,21 +115,21 @@ cp env.example .env
 ```
 
 ### **3. Database Setup**
-```bash
-# Generate Prisma client
-npm run db:generate
-
+   ```bash
+   # Generate Prisma client
+   npm run db:generate
+   
 # Push schema to database (development)
-npm run db:push
-
+   npm run db:push
+   
 # Or run migrations (production)
-npm run db:migrate
-```
+   npm run db:migrate
+   ```
 
 ### **4. Start Development Server**
-```bash
-npm run dev
-```
+   ```bash
+   npm run dev
+   ```
 
 Server will start at `http://localhost:3001`
 

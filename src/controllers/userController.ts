@@ -104,5 +104,61 @@ export const getUserById = async (req: AuthRequest, res: Response, next: NextFun
   }
 };
 
+export const createUser = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    if (!req.user) {
+      res.status(401).json({
+        success: false,
+        message: 'Authentication required'
+      });
+    }
+
+    const { name, email, password, role, avatarBase64 } = req.body;
+    
+    // Validate required fields
+    if (!name || !email || !password) {
+      res.status(400).json({
+        success: false,
+        message: 'Name, email, and password are required'
+      });
+      return;
+    }
+
+    // Validate role
+    if (role && !['admin', 'user'].includes(role)) {
+      res.status(400).json({
+        success: false,
+        message: 'Role must be either "admin" or "user"'
+      });
+      return;
+    }
+
+    // Only admins can create admin users
+    if (role === 'admin' && req.user!.role !== 'admin') {
+      res.status(403).json({
+        success: false,
+        message: 'Only admins can create admin users'
+      });
+      return;
+    }
+
+    const user = await userService.createUser({
+      name,
+      email,
+      password,
+      role: role || 'user',
+      avatarUrl: avatarBase64
+    });
+    
+    res.status(201).json({
+      success: true,
+      message: 'User created successfully',
+      data: user
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Middleware for handling file uploads
 export const uploadAvatar = uploadSingle;

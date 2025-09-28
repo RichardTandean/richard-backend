@@ -1,6 +1,7 @@
 import { prisma } from '@/models';
 import { CustomError } from '@/utils/errorHandler';
 import { UserListQuery, PaginatedResponse, User } from '@/types';
+import bcrypt from 'bcryptjs';
 
 export class UserService {
   async getCurrentUser(userId: string): Promise<Omit<User, 'passwordHash'>> {
@@ -106,6 +107,48 @@ export class UserService {
     if (!user) {
       throw new CustomError('User not found', 404);
     }
+
+    return user as Omit<User, 'passwordHash'>;
+  }
+
+  async createUser(data: {
+    name: string;
+    email: string;
+    password: string;
+    role: string;
+    avatarUrl?: string;
+  }): Promise<Omit<User, 'passwordHash'>> {
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email: data.email }
+    });
+
+    if (existingUser) {
+      throw new CustomError('User with this email already exists', 409);
+    }
+
+    // Hash password
+    const passwordHash = await bcrypt.hash(data.password, 12);
+
+    // Create user
+    const user = await prisma.user.create({
+      data: {
+        name: data.name,
+        email: data.email,
+        passwordHash,
+        role: data.role,
+        avatarUrl: data.avatarUrl
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        avatarUrl: true,
+        createdAt: true,
+        updatedAt: true
+      }
+    });
 
     return user as Omit<User, 'passwordHash'>;
   }

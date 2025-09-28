@@ -3,7 +3,8 @@ import {
   getCurrentUser, 
   updateProfile, 
   getUsers, 
-  getUserById
+  getUserById,
+  createUser
 } from '@/controllers/userController';
 import { authenticate, requireAdmin } from '@/middleware/auth';
 
@@ -19,5 +20,6 @@ router.put('/me', updateProfile);
 // Admin-only routes
 router.get('/', requireAdmin, getUsers);
 router.get('/:id', requireAdmin, getUserById);
+router.post('/', requireAdmin, createUser);
 
 export default router;
